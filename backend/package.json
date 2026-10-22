@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "docker compose -f ../docker-compose.yml up -d db --wait && ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "start": "docker compose -f ../docker-compose.yml up -d db --wait && node dist/server.js"
+    "start": "node dist/server.js",
+    "dev:supabase": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -30,7 +32,6 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
-    "cors": "^2.8.6",
     "jest": "^30.5.2",
     "supertest": "^7.3.0",
     "ts-jest": "^29.4.14",
