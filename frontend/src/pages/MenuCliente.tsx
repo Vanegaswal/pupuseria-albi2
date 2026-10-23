@@ -92,6 +92,7 @@ export default function MenuCliente() {
     acc[p.categoria_nombre].push(p);
     return acc;
   }, {});
+  const numeroMesa = mesas.find(mesa => String(mesa.id) === mesaId)?.numero_mesa ?? mesaId;
 
   const openModal = (producto: any) => {
     setSelectedProduct(producto);
@@ -240,7 +241,7 @@ export default function MenuCliente() {
         </button>
         <UtensilsCrossed size={32} color={COLORS.white} strokeWidth={1} style={{ margin: '0 auto 1rem auto' }} />
         <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '500', letterSpacing: '0.5px' }}>Pupusería Albi</h1>
-        <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.9rem', color: '#e0e7ff' }}>Mesa {mesaId}</p>
+        <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.9rem', color: '#e0e7ff' }}>Mesa {numeroMesa}</p>
         {nombreCliente && <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.85rem', color: '#cbd5e1' }}>Mesa a nombre de: {nombreCliente}</p>}
       </header>
 
