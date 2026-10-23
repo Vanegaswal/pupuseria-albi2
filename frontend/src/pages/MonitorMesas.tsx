@@ -41,7 +41,7 @@ export default function MonitorMesas() {
 
   return (
     <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.navy }}>
             <ArrowLeft size={18} />
@@ -51,8 +51,8 @@ export default function MonitorMesas() {
         </div>
       </header>
 
-      <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '2rem' }}>
+      <div className="page-content" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+        <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '2rem' }}>
           {mesas.map(mesa => {
             const sesion = sesiones.find(s => s.mesa_id === mesa.id);
             // Si la mesa no tiene sesión en cuentas, chequear estado de la mesa real. 
@@ -91,7 +91,7 @@ export default function MonitorMesas() {
       {selectedMesa && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
           <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '500px', border: `1px solid ${COLORS.navy}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
-            <div style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="table-detail-header" style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ margin: 0, color: COLORS.navy, fontSize: '1.3rem', fontWeight: '600' }}>Detalle - Mesa {selectedMesa.numero_mesa}</h2>
               {selectedMesa.sesion?.cliente_nombre && <p style={{margin: 0, fontSize: '1rem', color: COLORS.textMuted}}>Cliente: {selectedMesa.sesion.cliente_nombre}</p>}
               <span style={{ padding: '0.3rem 0.8rem', borderRadius: '4px', backgroundColor: selectedMesa.estado === 'disponible' ? COLORS.free : COLORS.occupied, color: COLORS.white, fontSize: '0.85rem', fontWeight: 'bold' }}>

@@ -234,7 +234,7 @@ export default function Caja() {
   return (
     <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.navy }}>
             <ArrowLeft size={18} />
@@ -250,7 +250,7 @@ export default function Caja() {
         </div>
       </header>
 
-      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.5rem', width: '100%', boxSizing: 'border-box' }}>
+      <main className="page-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '1.5rem', width: '100%', boxSizing: 'border-box' }}>
         {cargando && <p role="status" style={{ padding: '1rem', color: COLORS.textMuted }}>Cargando estado de caja...</p>}
         {errorCarga && <div role="alert" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', padding: '1rem', marginBottom: '1rem', color: '#9f2d2d', backgroundColor: '#fff1f0', border: '1px solid #f2c7c3', borderRadius: '6px' }}>
           <span>{errorCarga}</span>
@@ -273,7 +273,7 @@ export default function Caja() {
         {turno?.activo && <section style={{ marginBottom: '2rem' }}>
           <h2 style={{ margin: '0 0 1rem', color: COLORS.navy, fontSize: '1.15rem' }}>Cuentas pendientes</h2>
           {errorCuentas && <div role="alert" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', padding: '1rem', marginBottom: '1rem', color: '#9f2d2d', backgroundColor: '#fff1f0', borderRadius: '6px' }}><span>{errorCuentas}</span><button onClick={fetchCuentas} style={{ background: 'transparent', border: 0, color: '#7f1d1d', textDecoration: 'underline', cursor: 'pointer' }}>Reintentar</button></div>}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
+          <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
             {cuentas.map(c => (
               <article key={c.sesion_id} style={{ backgroundColor: COLORS.white, border: `1px solid ${COLORS.border}`, padding: '1.25rem', borderRadius: '8px', display: 'flex', flexDirection: 'column' }}>
                 <h3 style={{ margin: '0 0 0.5rem', color: COLORS.navy, fontSize: '1.05rem' }}>Mesa {c.numero_mesa}</h3>
@@ -287,12 +287,12 @@ export default function Caja() {
         </section>}
 
         {puedeGestionarTurno && <section>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem' }}>
+          <div className="table-detail-header" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.75rem' }}>
             <h2 style={{ margin: 0, color: COLORS.navy, fontSize: '1.15rem' }}>Historial de caja</h2>
             <span style={{ color: COLORS.textMuted, fontSize: '0.85rem' }}>Ventas brutas; no descuenta costos de productos</span>
           </div>
           {errorHistorial && <div role="alert" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', padding: '1rem', marginBottom: '1rem', color: '#9f2d2d', backgroundColor: '#fff1f0', borderRadius: '6px' }}><span>{errorHistorial}</span><button onClick={fetchHistorial} style={{ background: 'transparent', border: 0, color: '#7f1d1d', textDecoration: 'underline', cursor: 'pointer' }}>Reintentar</button></div>}
-          <div style={{ overflowX: 'auto', border: `1px solid ${COLORS.border}`, borderRadius: '8px' }}>
+          <div className="table-scroll" style={{ overflowX: 'auto', border: `1px solid ${COLORS.border}`, borderRadius: '8px' }}>
             <table style={{ width: '100%', minWidth: '820px', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead style={{ backgroundColor: COLORS.navy, color: COLORS.white }}><tr>
                 {['Estado', 'Apertura', 'Cierre', 'Monto inicial', 'Ventas brutas', 'Monto final', 'Responsable'].map(label => <th key={label} style={{ padding: '0.8rem', fontSize: '0.85rem' }}>{label}</th>)}

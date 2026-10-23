@@ -16,14 +16,21 @@ const router = Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - usuario
+ *               - password
  *             properties:
  *               usuario:
  *                 type: string
+ *                 maxLength: 50
  *               password:
  *                 type: string
+ *                 minLength: 1
  *     responses:
  *       200:
  *         description: Login exitoso
+ *       400:
+ *         description: Usuario o contraseña ausentes o inválidos
  *       401:
  *         description: Credenciales inválidas
  */

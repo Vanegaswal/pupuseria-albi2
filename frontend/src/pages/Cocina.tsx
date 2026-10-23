@@ -57,7 +57,7 @@ export default function Cocina() {
 
   return (
     <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', color: COLORS.navy, fontFamily: '"Inter", "Segoe UI", sans-serif' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.navy, color: COLORS.white, padding: '1.5rem 2rem' }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.navy, color: COLORS.white, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
             <ArrowLeft size={18} />
@@ -77,7 +77,7 @@ export default function Cocina() {
         </div>
       </header>
 
-      <div style={{ padding: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="kitchen-orders" style={{ padding: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
         {pedidos.map(pedido => {
           const isPendiente = pedido.estado === 'pendiente';
           return (

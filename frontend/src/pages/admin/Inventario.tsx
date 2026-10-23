@@ -92,7 +92,7 @@ export default function Inventario() {
           </label>
         </div>}
       </ConfirmModal>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.navy }}>
             <ArrowLeft size={18} />
@@ -102,7 +102,7 @@ export default function Inventario() {
         </div>
       </header>
 
-      <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+      <div className="page-content" style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
         <form onSubmit={handleCreate} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', alignItems: 'end', padding: '1.25rem', marginBottom: '1.25rem', border: `1px solid ${COLORS.border}`, borderRadius: '8px' }}>
           <label style={{ color: COLORS.navy, fontSize: '0.9rem' }}>Insumo
             <input required maxLength={100} value={nuevoInsumo.nombre} onChange={event => setNuevoInsumo(current => ({ ...current, nombre: event.target.value }))} placeholder="Nombre del insumo" style={{ display: 'block', width: '100%', boxSizing: 'border-box', marginTop: '0.35rem', padding: '0.65rem', border: `1px solid ${COLORS.border}`, borderRadius: '6px', color: COLORS.navy, backgroundColor: COLORS.white }} />
@@ -124,7 +124,7 @@ export default function Inventario() {
           <button onClick={fetchInsumos} style={{ color: '#7f1d1d', background: 'transparent', border: 0, textDecoration: 'underline', cursor: 'pointer' }}>Reintentar</button>
         </div>}
 
-        <div style={{ backgroundColor: COLORS.white, borderRadius: '8px', border: `1px solid ${COLORS.border}`, overflow: 'hidden' }}>
+        <div className="table-scroll" style={{ backgroundColor: COLORS.white, borderRadius: '8px', border: `1px solid ${COLORS.border}`, overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead style={{ backgroundColor: COLORS.navy, color: COLORS.white, textAlign: 'left' }}>
               <tr>

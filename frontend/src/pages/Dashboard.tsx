@@ -58,11 +58,11 @@ export default function Dashboard({ title }: { title: string }) {
   };
 
   return (
-    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', padding: '2rem', color: COLORS.navy, fontFamily: '"Inter", "Segoe UI", sans-serif' }}>
+    <div className="dashboard-page" style={{ backgroundColor: COLORS.white, minHeight: '100vh', padding: '2rem', color: COLORS.navy, fontFamily: '"Inter", "Segoe UI", sans-serif' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1.5rem' }}>
+        <header className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1.5rem' }}>
           <h2 style={{ fontSize: '1.5rem', margin: 0, fontWeight: '600', color: COLORS.navy }}>{title}</h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div className="dashboard-user" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             <span style={{ fontSize: '1rem', color: COLORS.navy }}>{user?.nombre} <span style={{ color: COLORS.textMuted }}>({user?.rol})</span></span>
             <button onClick={handleLogout} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', background: 'transparent', color: COLORS.navy, border: `1px solid ${COLORS.navy}`, borderRadius: '6px', fontWeight: '500', fontSize: '0.9rem', transition: 'all 0.2s' }}>
               <LogOut size={16} />
@@ -73,7 +73,7 @@ export default function Dashboard({ title }: { title: string }) {
 
         <main>
           {llamadasCuenta.length > 0 && (
-            <Link to="/monitor" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', padding: '1.25rem 1.5rem', marginBottom: '1.5rem', backgroundColor: '#fff7ed', color: '#7c2d12', border: '1px solid #fed7aa', borderLeft: '5px solid #ea580c', borderRadius: '8px', textDecoration: 'none' }}>
+            <Link to="/monitor" className="dashboard-alert" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', padding: '1.25rem 1.5rem', marginBottom: '1.5rem', backgroundColor: '#fff7ed', color: '#7c2d12', border: '1px solid #fed7aa', borderLeft: '5px solid #ea580c', borderRadius: '8px', textDecoration: 'none' }}>
               <div>
                 <strong style={{ display: 'block', fontSize: '1rem' }}>{llamadasCuenta.length} {llamadasCuenta.length === 1 ? 'mesa solicita' : 'mesas solicitan'} la cuenta</strong>
                 <span style={{ fontSize: '0.9rem' }}>{llamadasCuenta.map(cuenta => `Mesa ${cuenta.numero_mesa}`).join(' · ')}</span>

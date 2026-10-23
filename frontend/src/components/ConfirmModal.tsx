@@ -37,7 +37,7 @@ export default function ConfirmModal({ isOpen, title, message, type = 'info', on
         <p style={{ margin: '0 0 2rem 0', color: COLORS.textMuted, fontSize: '1rem', lineHeight: '1.5' }}>{message}</p>
         {children}
         
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+        <div className="modal-actions" style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
           {!hideCancel && (
             <button onClick={onCancel} style={{ padding: '0.6rem 1.2rem', backgroundColor: COLORS.white, color: COLORS.navy, border: `1px solid ${COLORS.navy}`, borderRadius: '6px', fontWeight: '500', cursor: 'pointer', fontSize: '0.95rem' }}>
               {cancelText}

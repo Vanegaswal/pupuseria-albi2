@@ -165,12 +165,12 @@ export default function MenuAdmin() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: COLORS.white, color: COLORS.navy, fontFamily: '"Inter", "Segoe UI", sans-serif' }}>
       <ConfirmModal {...modalConfig} />
-      <header style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 2rem', borderBottom: `1px solid ${COLORS.border}` }}>
+      <header className="module-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 2rem', borderBottom: `1px solid ${COLORS.border}` }}>
         <button onClick={() => navigate('/admin')} aria-label="Regresar al panel" title="Regresar al panel" style={{ ...buttonStyle, width: '38px', height: '38px', padding: 0 }}><ArrowLeft size={18} /></button>
         <h1 style={{ margin: 0, fontSize: '1.25rem', color: COLORS.navy }}>Gestión del menú</h1>
       </header>
 
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '1.5rem', boxSizing: 'border-box' }}>
+      <main className="page-content" style={{ maxWidth: '1100px', margin: '0 auto', padding: '1.5rem', boxSizing: 'border-box' }}>
         {error && <div role="alert" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', padding: '1rem', marginBottom: '1rem', color: '#9f2d2d', backgroundColor: '#fff1f0', border: '1px solid #f2c7c3', borderRadius: '6px' }}>
           <span>{error}</span><button onClick={cargarCatalogo} style={{ ...buttonStyle, color: '#7f1d1d' }}>Reintentar</button>
         </div>}
@@ -205,7 +205,7 @@ export default function MenuAdmin() {
 
         <section style={{ marginBottom: '1.5rem', padding: '1rem 1.25rem', border: `1px solid ${COLORS.border}`, borderRadius: '8px' }}>
           <h2 style={{ margin: '0 0 0.75rem', color: COLORS.navy, fontSize: '1.05rem' }}>Categorías</h2>
-          <form onSubmit={crearCategoria} style={{ display: 'flex', gap: '0.6rem', maxWidth: '520px' }}>
+          <form className="category-form" onSubmit={crearCategoria} style={{ display: 'flex', gap: '0.6rem', maxWidth: '520px' }}>
             <input required maxLength={100} value={nuevaCategoria} onChange={event => setNuevaCategoria(event.target.value)} placeholder="Nueva categoría" style={{ ...inputStyle, marginTop: 0 }} />
             <button type="submit" style={{ ...buttonStyle, backgroundColor: COLORS.navy, color: COLORS.white, borderColor: COLORS.navy, whiteSpace: 'nowrap' }}><Plus size={16} /> Agregar</button>
           </form>
@@ -221,7 +221,7 @@ export default function MenuAdmin() {
 
         <section>
           <h2 style={{ margin: '0 0 0.75rem', color: COLORS.navy, fontSize: '1.05rem' }}>Productos del catálogo</h2>
-          <div style={{ overflowX: 'auto', border: `1px solid ${COLORS.border}`, borderRadius: '8px' }}>
+          <div className="table-scroll" style={{ overflowX: 'auto', border: `1px solid ${COLORS.border}`, borderRadius: '8px' }}>
             <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead style={{ backgroundColor: COLORS.navy, color: COLORS.white }}><tr>
                 {['Producto', 'Categoría', 'Precio', 'Estado', 'Acciones'].map(label => <th key={label} style={{ padding: '0.8rem', fontSize: '0.85rem' }}>{label}</th>)}

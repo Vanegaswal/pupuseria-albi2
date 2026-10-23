@@ -202,7 +202,7 @@ export default function MenuCliente() {
     return (
       <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
         <ConfirmModal {...modalConfig} />
-        <header style={{ position: 'relative', padding: '2rem 1.5rem', textAlign: 'center', backgroundColor: COLORS.navy, color: COLORS.white }}>
+        <header className="customer-menu-header" style={{ position: 'relative', padding: '2rem 1.5rem', textAlign: 'center', backgroundColor: COLORS.navy, color: COLORS.white }}>
           <button onClick={() => navigate('/admin')} aria-label="Regresar al panel principal" title="Regresar al panel principal" style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
             <ArrowLeft size={18} />
           </button>
@@ -210,11 +210,11 @@ export default function MenuCliente() {
           <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '500' }}>Pupusería Albi</h1>
           <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.9rem', color: '#e0e7ff' }}>Selecciona tu mesa</p>
         </header>
-        <main style={{ maxWidth: '760px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+        <main className="page-content" style={{ maxWidth: '760px', margin: '0 auto', padding: '2rem 1.5rem' }}>
           {mesas.length === 0 ? (
             <p style={{ textAlign: 'center', color: COLORS.textMuted }}>No hay mesas disponibles.</p>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
+            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
               {mesas.map(mesa => (
                 <button key={mesa.id} onClick={() => navigate(`/menu/${mesa.id}`)} style={{ minHeight: '100px', padding: '1rem', backgroundColor: COLORS.white, color: COLORS.navy, border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', fontSize: '1.1rem', fontWeight: '600' }}>
                   Mesa {mesa.numero_mesa}
@@ -231,7 +231,7 @@ export default function MenuCliente() {
     <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', paddingBottom: '120px', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
       
-      <header style={{ padding: '2rem 1.5rem', textAlign: 'center', borderBottom: `1px solid ${COLORS.border}`, backgroundColor: COLORS.navy, color: COLORS.white, position: 'relative' }}>
+      <header className="customer-menu-header" style={{ padding: '2rem 1.5rem', textAlign: 'center', borderBottom: `1px solid ${COLORS.border}`, backgroundColor: COLORS.navy, color: COLORS.white, position: 'relative' }}>
         <button onClick={() => navigate('/menu')} aria-label="Volver a seleccionar mesa" title="Volver a seleccionar mesa" style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
           <ArrowLeft size={18} />
         </button>
@@ -244,7 +244,7 @@ export default function MenuCliente() {
         {nombreCliente && <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.85rem', color: '#cbd5e1' }}>Mesa a nombre de: {nombreCliente}</p>}
       </header>
 
-      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '1.5rem' }}>
+      <div className="customer-menu-content" style={{ maxWidth: '600px', margin: '0 auto', padding: '1.5rem' }}>
         <button onClick={abrirPedidoLlevar} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', width: '100%', padding: '0.8rem', marginBottom: '2rem', backgroundColor: COLORS.white, color: COLORS.navy, border: `1px solid ${COLORS.navy}`, borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}>
           <Package size={17} /> Anexar productos para llevar
         </button>
@@ -255,7 +255,7 @@ export default function MenuCliente() {
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.2rem' }}>
               {categorias[catName].map((p: any) => (
-                <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '1.2rem', borderBottom: `1px dashed ${COLORS.border}` }}>
+                <div key={p.id} className="customer-menu-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '1.2rem', borderBottom: `1px dashed ${COLORS.border}` }}>
                   <div style={{ paddingRight: '1rem' }}>
                     <h3 style={{ margin: '0 0 0.3rem 0', color: COLORS.navy, fontSize: '1.1rem', fontWeight: '500' }}>{p.nombre}</h3>
                     <p style={{ margin: '0 0 0.5rem 0', color: COLORS.textMuted, fontSize: '0.85rem', lineHeight: '1.4' }}>{p.descripcion}</p>
@@ -275,7 +275,7 @@ export default function MenuCliente() {
       </div>
 
       {carrito.length > 0 && (
-        <section style={{ position: 'fixed', bottom: '1rem', left: '1rem', right: '1rem', maxWidth: '600px', margin: '0 auto', backgroundColor: COLORS.navy, borderRadius: '8px', color: COLORS.white, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.25)', zIndex: 10, overflow: 'hidden' }}>
+        <section className="customer-menu-cart" style={{ position: 'fixed', bottom: '1rem', left: '1rem', right: '1rem', maxWidth: '600px', margin: '0 auto', backgroundColor: COLORS.navy, borderRadius: '8px', color: COLORS.white, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.25)', zIndex: 10, overflow: 'hidden' }}>
           {carritoExpandido && <div style={{ maxHeight: 'min(55vh, 440px)', overflowY: 'auto', padding: '0.5rem 1rem' }}>
             {carrito.map((item, index) => <article key={item.uuid} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '0.75rem', alignItems: 'center', padding: '0.8rem 0', borderBottom: index === carrito.length - 1 ? 'none' : '1px solid rgba(255,255,255,0.2)' }}>
               <div style={{ minWidth: 0 }}>

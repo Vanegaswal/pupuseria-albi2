@@ -22,7 +22,7 @@ export default function Estadisticas() {
 
   return (
     <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.navy }}>
             <ArrowLeft size={18} />
@@ -32,16 +32,16 @@ export default function Estadisticas() {
         </div>
       </header>
 
-      <div style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <div style={{ backgroundColor: COLORS.white, border: `1px solid ${COLORS.border}`, padding: '1.5rem', borderRadius: '8px', minWidth: '250px' }}>
+      <div className="page-content" style={{ padding: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="statistics-summary" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <div className="statistics-total" style={{ backgroundColor: COLORS.white, border: `1px solid ${COLORS.border}`, padding: '1.5rem', borderRadius: '8px', minWidth: '250px' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', color: COLORS.textMuted }}>Ingresos Totales</h3>
             <p style={{ margin: 0, fontSize: '2.5rem', fontWeight: '600', color: COLORS.navy }}>
               ${(datos?.ingresos_totales || 0).toFixed(2)}
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: '#f8fafc', padding: '0.4rem', borderRadius: '8px', border: `1px solid ${COLORS.border}` }}>
+          <div className="statistics-periods" style={{ display: 'flex', gap: '0.5rem', backgroundColor: '#f8fafc', padding: '0.4rem', borderRadius: '8px', border: `1px solid ${COLORS.border}` }}>
             {['dia', 'semana', 'mes'].map(p => (
               <button 
                 key={p}
@@ -61,7 +61,7 @@ export default function Estadisticas() {
         <div style={{ backgroundColor: COLORS.white, border: `1px solid ${COLORS.border}`, padding: '2rem', borderRadius: '8px' }}>
           <h3 style={{ margin: '0 0 2rem 0', fontSize: '1.1rem', fontWeight: '500' }}>Productos Más Vendidos</h3>
           {datos?.productos_mas_vendidos?.length > 0 ? (
-            <div style={{ height: '400px', width: '100%' }}>
+            <div className="statistics-chart" style={{ height: '400px', width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={datos.productos_mas_vendidos}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={COLORS.border} />

@@ -31,7 +31,7 @@ export default function Login() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100svh', padding: '1.25rem', boxSizing: 'border-box', backgroundColor: '#edf4f0' }}>
-      <div style={{ padding: '2.25rem', backgroundColor: '#ffffff', border: '1px solid #d6e3dc', borderTop: '4px solid #2f6f56', borderRadius: '8px', boxShadow: '0 18px 48px rgba(0, 40, 85, 0.10)', width: '100%', maxWidth: '400px', boxSizing: 'border-box' }}>
+      <div className="login-card" style={{ padding: '2.25rem', backgroundColor: '#ffffff', border: '1px solid #d6e3dc', borderTop: '4px solid #2f6f56', borderRadius: '8px', boxShadow: '0 18px 48px rgba(0, 40, 85, 0.10)', width: '100%', maxWidth: '400px', boxSizing: 'border-box' }}>
         <h1 style={{ textAlign: 'center', margin: '0 0 0.5rem', color: '#002855', fontSize: '1.65rem', fontWeight: '700' }}>Pupusería Albi</h1>
         <p style={{ textAlign: 'center', margin: '0 0 1.75rem', color: '#52665d', fontSize: '0.95rem' }}>Acceso al sistema</p>
         {error && <div role="alert" style={{ color: '#9f2d2d', backgroundColor: '#fff1f0', border: '1px solid #f2c7c3', borderRadius: '6px', padding: '0.75rem', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}

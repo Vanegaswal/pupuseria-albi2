@@ -104,7 +104,7 @@ export default function Mesas() {
   return (
     <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.navy }}>
             <ArrowLeft size={18} />
@@ -114,13 +114,13 @@ export default function Mesas() {
         </div>
       </header>
 
-      <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ backgroundColor: COLORS.white, padding: '1.5rem', borderRadius: '8px', border: `1px solid ${COLORS.navy}`, marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="page-content" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+        <div className="create-table-panel" style={{ backgroundColor: COLORS.white, padding: '1.5rem', borderRadius: '8px', border: `1px solid ${COLORS.navy}`, marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem', fontWeight: '500' }}>Agregar Nueva Mesa</h3>
             <p style={{ margin: 0, fontSize: '0.9rem', color: COLORS.textMuted }}>Crea una mesa para generar su código QR único.</p>
           </div>
-          <form onSubmit={handleCreate} style={{ display: 'flex', gap: '1rem' }}>
+          <form className="create-table-form" onSubmit={handleCreate} style={{ display: 'flex', gap: '1rem' }}>
             <input 
               type="number" 
               placeholder="Número ej. 5" 
@@ -136,7 +136,7 @@ export default function Mesas() {
           </form>
         </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
+        <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
           {mesas.map(mesa => (
             <div key={mesa.id} style={{ backgroundColor: COLORS.white, border: `1px solid ${COLORS.border}`, padding: '1.5rem', borderRadius: '8px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.1rem', fontWeight: '500' }}>Mesa {mesa.numero_mesa}</h3>
