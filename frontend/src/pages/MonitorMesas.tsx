@@ -4,13 +4,14 @@ import { Utensils, ArrowLeft, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const COLORS = {
-  navy: '#002855',
+  ink: '#1D2B5C',
+  rose: '#F4E1DE',
   white: '#ffffff',
-  border: '#e2e8f0',
-  textMuted: '#475569',
-  free: '#16a34a',
-  occupied: '#dc2626',
-  requesting: '#ea580c'
+  border: '#e8d7d4',
+  textMuted: '#64748b',
+  free: '#00A060',
+  occupied: '#1D2B5C',
+  requesting: '#F4E1DE'
 };
 
 export default function MonitorMesas() {
@@ -40,14 +41,14 @@ export default function MonitorMesas() {
   };
 
   return (
-    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
-      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+    <div style={{ backgroundColor: COLORS.rose, minHeight: '100vh', color: COLORS.ink }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.ink, color: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.navy }}>
+          <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.rose}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
             <ArrowLeft size={18} />
           </button>
-          <Utensils size={24} color={COLORS.navy} strokeWidth={1.5} />
-          <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '500' }}>Monitor de Mesas en Tiempo Real</h2>
+          <Utensils size={24} color={COLORS.rose} strokeWidth={1.5} />
+          <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '500' }}>Monitor de Mesas en Tiempo Real</h2>
         </div>
       </header>
 
@@ -60,6 +61,7 @@ export default function MonitorMesas() {
             const isOcupada = mesa.estado !== 'disponible';
             const isPidiendoCuenta = sesion?.estado_sesion === 'pidiendo_cuenta';
             const color = isPidiendoCuenta ? COLORS.requesting : (isOcupada ? COLORS.occupied : COLORS.free);
+            const statusTextColor = isPidiendoCuenta ? COLORS.ink : color;
             
             return (
               <div 
@@ -69,16 +71,16 @@ export default function MonitorMesas() {
                   backgroundColor: COLORS.white, border: `2px solid ${color}`, borderRadius: '12px', padding: '1.5rem', 
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
                   cursor: 'pointer', transition: 'transform 0.2s',
-                  boxShadow: isOcupada ? '0 4px 10px rgba(220, 38, 38, 0.1)' : '0 4px 10px rgba(22, 163, 74, 0.1)'
+                  boxShadow: isOcupada ? '0 4px 10px rgba(29, 43, 92, 0.1)' : '0 4px 10px rgba(0, 160, 96, 0.1)'
                 }}
                 onMouseOver={e => e.currentTarget.style.transform = 'translateY(-4px)'}
                 onMouseOut={e => e.currentTarget.style.transform = 'none'}
               >
-                <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: COLORS.white }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: isPidiendoCuenta ? COLORS.ink : color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: COLORS.white }}>
                   <Users size={30} />
                 </div>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', color: COLORS.navy }}>Mesa {mesa.numero_mesa}</h3>
-                <span style={{ fontSize: '0.85rem', color: color, fontWeight: '600', marginTop: '0.5rem', textTransform: 'uppercase' }}>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: COLORS.ink }}>Mesa {mesa.numero_mesa}</h3>
+                <span style={{ fontSize: '0.85rem', color: statusTextColor, fontWeight: '600', marginTop: '0.5rem', textTransform: 'uppercase' }}>
                   {isPidiendoCuenta ? 'Pidiendo Cuenta' : (isOcupada ? 'Ocupada' : 'Libre')}
                 </span>
                 {sesion && <span style={{ fontSize: '0.85rem', color: COLORS.textMuted, marginTop: '0.2rem' }}>Acumulado: ${Number(sesion.total).toFixed(2)}</span>}
@@ -89,10 +91,10 @@ export default function MonitorMesas() {
       </div>
 
       {selectedMesa && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
-          <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '500px', border: `1px solid ${COLORS.navy}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
+          <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '500px', border: `1px solid ${COLORS.ink}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
             <div className="table-detail-header" style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ margin: 0, color: COLORS.navy, fontSize: '1.3rem', fontWeight: '600' }}>Detalle - Mesa {selectedMesa.numero_mesa}</h2>
+              <h2 style={{ margin: 0, color: COLORS.ink, fontSize: '1.3rem', fontWeight: '600' }}>Detalle - Mesa {selectedMesa.numero_mesa}</h2>
               {selectedMesa.sesion?.cliente_nombre && <p style={{margin: 0, fontSize: '1rem', color: COLORS.textMuted}}>Cliente: {selectedMesa.sesion.cliente_nombre}</p>}
               <span style={{ padding: '0.3rem 0.8rem', borderRadius: '4px', backgroundColor: selectedMesa.estado === 'disponible' ? COLORS.free : COLORS.occupied, color: COLORS.white, fontSize: '0.85rem', fontWeight: 'bold' }}>
                 {selectedMesa.estado.toUpperCase()}
@@ -101,10 +103,10 @@ export default function MonitorMesas() {
             
             {selectedMesa.sesion ? (
               <div>
-                <p style={{ margin: '0 0 0.5rem 0', color: COLORS.textMuted }}>Total consumido: <strong style={{ color: COLORS.navy, fontSize: '1.2rem' }}>${Number(selectedMesa.sesion.total).toFixed(2)}</strong></p>
+                <p style={{ margin: '0 0 0.5rem 0', color: COLORS.textMuted }}>Total consumido: <strong style={{ color: COLORS.ink, fontSize: '1.2rem' }}>${Number(selectedMesa.sesion.total).toFixed(2)}</strong></p>
                 <p style={{ margin: '0 0 1.5rem 0', color: COLORS.textMuted, fontSize: '0.9rem' }}>Abierta a las: {new Date(selectedMesa.sesion.abierta_en).toLocaleTimeString()}</p>
                 
-                <div style={{ backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '8px', border: `1px solid ${COLORS.border}`, marginBottom: '1.5rem' }}>
+                <div style={{ backgroundColor: COLORS.rose, padding: '1rem', borderRadius: '8px', border: `1px solid ${COLORS.border}`, marginBottom: '1.5rem' }}>
                   <p style={{ margin: 0, fontSize: '0.9rem', color: COLORS.textMuted }}>* Los pedidos se gestionan desde el módulo de Cocina, y el cobro desde el Punto de Venta.</p>
                 </div>
               </div>
@@ -114,7 +116,7 @@ export default function MonitorMesas() {
               </div>
             )}
 
-            <button onClick={() => setSelectedMesa(null)} style={{ width: '100%', padding: '0.8rem', backgroundColor: COLORS.white, color: COLORS.navy, border: `1px solid ${COLORS.navy}`, borderRadius: '6px', fontWeight: '600', cursor: 'pointer', fontSize: '1rem' }}>Cerrar</button>
+            <button onClick={() => setSelectedMesa(null)} style={{ width: '100%', padding: '0.8rem', backgroundColor: COLORS.ink, color: COLORS.white, border: `1px solid ${COLORS.ink}`, borderRadius: '6px', fontWeight: '600', cursor: 'pointer', fontSize: '1rem' }}>Cerrar</button>
           </div>
         </div>
       )}

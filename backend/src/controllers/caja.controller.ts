@@ -191,6 +191,23 @@ export const cobrarCuenta = async (req: Request, res: Response): Promise<void> =
   try {
     await client.query('BEGIN');
     const { sesion_id } = req.params;
+
+    // Keep the same mesa -> sesión lock order used by pedido creation.
+    const sesionMesa = await client.query(
+      'SELECT mesa_id FROM sesiones_mesa WHERE id = $1',
+      [sesion_id]
+    );
+    if (sesionMesa.rows.length === 0) {
+      await client.query('ROLLBACK');
+      res.status(404).json({ message: 'Cuenta no encontrada' });
+      return;
+    }
+    if (sesionMesa.rows[0].mesa_id !== null) {
+      await client.query(
+        'SELECT id FROM mesas WHERE id = $1 FOR UPDATE',
+        [sesionMesa.rows[0].mesa_id]
+      );
+    }
     
     const turno = await client.query("SELECT id FROM turnos_caja WHERE estado = 'abierto' ORDER BY abierto_en DESC LIMIT 1 FOR UPDATE");
     if (turno.rows.length === 0) {

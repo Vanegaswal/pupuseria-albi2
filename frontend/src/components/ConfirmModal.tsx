@@ -15,20 +15,20 @@ interface ModalProps {
 }
 
 const COLORS = {
-  navy: '#002855',
+  navy: '#1D2B5C',
   white: '#ffffff',
-  border: '#e2e8f0',
-  textMuted: '#475569'
+  border: '#e8d7d4',
+  textMuted: '#64748b'
 };
 
 export default function ConfirmModal({ isOpen, title, message, type = 'info', onConfirm, onCancel, confirmText = 'Aceptar', cancelText = 'Cancelar', hideCancel = false, children }: ModalProps) {
   if (!isOpen) return null;
 
   const Icon = type === 'warning' ? AlertCircle : (type === 'success' ? CheckCircle2 : Info);
-  const iconColor = type === 'warning' ? '#ea580c' : (type === 'success' ? '#16a34a' : COLORS.navy);
+  const iconColor = type === 'warning' ? '#ea580c' : (type === 'success' ? '#00A060' : COLORS.navy);
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, backdropFilter: 'blur(2px)', padding: '1rem' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, backdropFilter: 'blur(2px)', padding: '1rem' }}>
       <div role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" style={{ backgroundColor: COLORS.white, borderRadius: '8px', padding: '1.5rem', width: '100%', maxWidth: '420px', border: `1px solid ${COLORS.border}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
           <Icon size={28} color={iconColor} />

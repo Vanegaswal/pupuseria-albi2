@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../../components/ConfirmModal';
 
 const COLORS = {
-  navy: '#002855',
+  navy: '#1D2B5C',
   white: '#ffffff',
-  border: '#e2e8f0',
-  textMuted: '#475569'
+  border: '#e8d7d4',
+  textMuted: '#64748b'
 };
 
 export default function Inventario() {
@@ -74,7 +74,7 @@ export default function Inventario() {
   };
 
   return (
-    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
+    <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig}>
         {insumoEnAjuste && modalConfig.isOpen && <div style={{ display: 'grid', gap: '1rem', marginBottom: '1.5rem' }}>
           <div style={{ padding: '0.75rem', backgroundColor: '#f8fafc', border: `1px solid ${COLORS.border}`, borderRadius: '6px', color: COLORS.navy }}>
@@ -148,7 +148,7 @@ export default function Inventario() {
                     <td style={{ padding: '1rem' }}>
                       {isBajo ?
                         <span style={{ color: '#dc2626', fontWeight: '600', fontSize: '0.9rem' }}>Bajo Stock</span> : 
-                        <span style={{ color: '#16a34a', fontWeight: '600', fontSize: '0.9rem' }}>Óptimo</span>
+                        <span style={{ color: '#00A060', fontWeight: '600', fontSize: '0.9rem' }}>Óptimo</span>
                       }
                     </td>
                     <td style={{ padding: '1rem' }}>
