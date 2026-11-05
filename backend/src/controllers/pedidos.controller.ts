@@ -35,12 +35,12 @@ export const crearPedido = async (req: Request, res: Response): Promise<void> =>
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const { mesa_id, origen, detalles, cliente_nombre } = req.body;
+    const { mesa_id, detalles, cliente_nombre } = req.body;
     const tipoPedido = req.body.tipo_pedido ?? 'mesa';
     const mesaId = Number(mesa_id);
     if (!Number.isInteger(mesaId) || mesaId <= 0 || !Array.isArray(detalles) || detalles.length === 0 || !['mesa', 'llevar'].includes(tipoPedido)) {
       await client.query('ROLLBACK');
-      res.status(400).json({ message: 'Mesa y al menos un producto son obligatorios' });
+      res.status(400).json({ message: 'Mesa, tipo de pedido válido y al menos un producto son obligatorios' });
       return;
     }
 
@@ -51,31 +51,32 @@ export const crearPedido = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    // 1. Obtener o crear sesión activa de la mesa
+    // Pedidos de mesa y para llevar se anexan a la cuenta de esta mesa.
     const sesionActiva = await client.query(
-      "SELECT id, estado, cliente_nombre FROM sesiones_mesa WHERE mesa_id = $1 AND estado IN ('abierta', 'pidiendo_cuenta') LIMIT 1",
+      "SELECT id, estado, cliente_nombre FROM sesiones_mesa WHERE mesa_id = $1 AND estado IN ('abierta', 'pidiendo_cuenta') LIMIT 1 FOR UPDATE",
       [mesaId]
     );
-    let sesion_id;
-    
     if (sesionActiva.rows.length === 0) {
-      const nuevaSesion = await client.query(
-        'INSERT INTO sesiones_mesa (mesa_id, cliente_nombre) VALUES ($1, $2) RETURNING id', [mesaId, cliente_nombre || null]
-      );
-      sesion_id = nuevaSesion.rows[0].id;
-      await client.query('UPDATE mesas SET estado = $1 WHERE id = $2', ['ocupada', mesaId]);
-    } else {
-      sesion_id = sesionActiva.rows[0].id;
-      if (!sesionActiva.rows[0].cliente_nombre && typeof cliente_nombre === 'string' && cliente_nombre.trim()) {
-        await client.query('UPDATE sesiones_mesa SET cliente_nombre = $1 WHERE id = $2', [cliente_nombre.trim(), sesion_id]);
-      }
+      await client.query('ROLLBACK');
+      res.status(409).json({ message: 'Esta mesa no está habilitada para pedidos. Solicita al personal que abra una sesión.' });
+      return;
+    }
+    if (sesionActiva.rows[0].estado !== 'abierta') {
+      await client.query('ROLLBACK');
+      res.status(409).json({ message: 'La cuenta está pendiente de cobro y no acepta pedidos nuevos.' });
+      return;
+    }
+
+    const sesion_id = sesionActiva.rows[0].id;
+    if (!sesionActiva.rows[0].cliente_nombre && typeof cliente_nombre === 'string' && cliente_nombre.trim()) {
+      await client.query('UPDATE sesiones_mesa SET cliente_nombre = $1 WHERE id = $2', [cliente_nombre.trim(), sesion_id]);
     }
 
     // 2. Crear pedido
     let totalPedido = 0;
     const pedidoInsert = await client.query(
       'INSERT INTO pedidos (sesion_mesa_id, origen, tipo_pedido, estado) VALUES ($1, $2, $3, $4) RETURNING id, creado_en',
-      [sesion_id, origen || 'qr', tipoPedido, 'pendiente']
+      [sesion_id, 'qr', tipoPedido, 'pendiente']
     );
     const pedidoId = pedidoInsert.rows[0].id;
 
@@ -128,17 +129,25 @@ export const crearPedido = async (req: Request, res: Response): Promise<void> =>
       tipo_pedido: tipoPedido,
       estado: 'pendiente',
       total: totalPedido,
-      origen,
+      origen: 'qr',
       detalles: detallesProcesados,
       creado_en: pedidoInsert.rows[0].creado_en
     };
 
     // Emitir evento a monitor de cocina
-    getIO().to('cocina').emit('nuevo_pedido', nuevoPedidoEvent);
+    try {
+      getIO().to('cocina').emit('nuevo_pedido', nuevoPedidoEvent);
+    } catch (error) {
+      console.error('No se pudo notificar el nuevo pedido a cocina:', error);
+    }
 
     res.status(201).json({ message: 'Pedido creado exitosamente', id: pedidoId });
   } catch (error) {
-    await client.query('ROLLBACK');
+    try {
+      await client.query('ROLLBACK');
+    } catch (rollbackError) {
+      console.error('No se pudo revertir la transacción del pedido:', rollbackError);
+    }
     console.error(error);
     res.status(500).json({ message: 'Error al crear pedido' });
   } finally {

@@ -7,10 +7,10 @@ import ConfirmModal from '../components/ConfirmModal';
 import PedidoLlevarModal from '../components/PedidoLlevarModal';
 
 const COLORS = {
-  navy: '#002855',
+  navy: '#1D2B5C',
   white: '#ffffff',
-  border: '#e2e8f0',
-  textMuted: '#475569'
+  border: '#e8d7d4',
+  textMuted: '#64748b'
 };
 
 export default function MenuCliente() {
@@ -25,6 +25,7 @@ export default function MenuCliente() {
   const [showLlevarModal, setShowLlevarModal] = useState(false);
   const [tipoPedidoPendiente, setTipoPedidoPendiente] = useState<'mesa' | 'llevar'>('mesa');
   const [cuentaSolicitada, setCuentaSolicitada] = useState(false);
+  const [estadoSesion, setEstadoSesion] = useState<string | null>(null);
   
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [cantidad, setCantidad] = useState(1);
@@ -48,6 +49,7 @@ export default function MenuCliente() {
     });
     socket.on('sesion_pagada', ({ mesa_id: mesaPagada }) => {
       if (String(mesaPagada) === String(mesaId)) {
+        setEstadoSesion('pagada');
         localStorage.removeItem(`cliente_${mesaId}`);
         setNombreCliente('');
         setCuentaSolicitada(false);
@@ -61,15 +63,22 @@ export default function MenuCliente() {
     Promise.all([cargarProductos(), api.get('/mesas/publicas'), sesionRequest])
       .then(([, mesasRes, sesionRes]) => {
         setMesas(mesasRes.data);
+        if (mesaId) {
+          const sesion = sesionRes.data.sesion;
+          setEstadoSesion(sesion?.estado ?? null);
+        }
         if (mesaId && sesionRes.data.activa) {
           const nombre = sesionRes.data.sesion.cliente_nombre || localStorage.getItem(`cliente_${mesaId}`) || '';
           setNombreCliente(nombre);
-          setCuentaSolicitada(sesionRes.data.sesion.estado === 'pidiendo_cuenta');
+          setCuentaSolicitada(false);
           if (nombre) localStorage.setItem(`cliente_${mesaId}`, nombre);
         } else if (mesaId) {
-          localStorage.removeItem(`cliente_${mesaId}`);
-          setNombreCliente('');
-          setCuentaSolicitada(false);
+          const esperandoCobro = sesionRes.data.sesion?.estado === 'pidiendo_cuenta';
+          setCuentaSolicitada(esperandoCobro);
+          if (!esperandoCobro) {
+            localStorage.removeItem(`cliente_${mesaId}`);
+            setNombreCliente('');
+          }
         }
       })
       .catch(() => setModalConfig({
@@ -93,6 +102,12 @@ export default function MenuCliente() {
     return acc;
   }, {});
   const numeroMesa = mesas.find(mesa => String(mesa.id) === mesaId)?.numero_mesa ?? mesaId;
+  const sesionHabilitada = estadoSesion === 'abierta';
+  const mensajeEstadoSesion = estadoSesion === 'pidiendo_cuenta'
+    ? 'La cuenta está pendiente de cobro. Por el momento no se aceptan pedidos nuevos.'
+    : estadoSesion === 'pagada' || estadoSesion === 'cerrada'
+      ? 'Esta sesión ya fue cerrada. Solicita al personal que abra una nueva sesión para realizar pedidos.'
+      : 'Esta mesa todavía no está habilitada para recibir pedidos. Solicita al personal que abra una sesión.';
 
   const openModal = (producto: any) => {
     setSelectedProduct(producto);
@@ -118,6 +133,17 @@ export default function MenuCliente() {
   };
 
   const abrirPedidoLlevar = () => {
+    if (!sesionHabilitada) {
+      setModalConfig({
+        isOpen: true,
+        title: 'Pedidos no disponibles',
+        message: mensajeEstadoSesion,
+        type: 'warning',
+        hideCancel: true,
+        onConfirm: () => setModalConfig({ isOpen: false })
+      });
+      return;
+    }
     if (!nombreCliente) {
       setTipoPedidoPendiente('llevar');
       setShowNombreModal(true);
@@ -127,6 +153,17 @@ export default function MenuCliente() {
   };
 
   const handleEnviarClick = () => {
+    if (!sesionHabilitada) {
+      setModalConfig({
+        isOpen: true,
+        title: 'Pedidos no disponibles',
+        message: mensajeEstadoSesion,
+        type: 'warning',
+        hideCancel: true,
+        onConfirm: () => setModalConfig({ isOpen: false })
+      });
+      return;
+    }
     if (!nombreCliente) {
       setTipoPedidoPendiente('mesa');
       setShowNombreModal(true);
@@ -147,6 +184,17 @@ export default function MenuCliente() {
 
   const enviarPedido = async (tipoPedido: 'mesa' | 'llevar', itemsPedido: any[]): Promise<boolean> => {
     if (itemsPedido.length === 0 || enviando) return false;
+    if (!sesionHabilitada) {
+      setModalConfig({
+        isOpen: true,
+        title: 'Pedidos no disponibles',
+        message: mensajeEstadoSesion,
+        type: 'warning',
+        hideCancel: true,
+        onConfirm: () => setModalConfig({ isOpen: false })
+      });
+      return false;
+    }
     setEnviando(true);
     try {
       const detalles = itemsPedido.map(item => ({
@@ -177,6 +225,7 @@ export default function MenuCliente() {
   };
 
   const solicitarCuenta = async () => {
+    if (!sesionHabilitada || cuentaSolicitada) return;
     setModalConfig({
       isOpen: true,
       title: 'Pedir Cuenta',
@@ -185,12 +234,13 @@ export default function MenuCliente() {
         try {
           await api.post(`/mesas/${mesaId}/solicitar-cuenta`);
           setCuentaSolicitada(true);
+          setEstadoSesion('pidiendo_cuenta');
           setModalConfig({
-            isOpen: true, title: 'Cuenta Solicitada', message: 'El mesero ya fue notificado. Puedes agregar productos a esta misma cuenta; el nombre y la mesa seguirán activos hasta que Caja registre el cobro.', type: 'success', hideCancel: true,
+            isOpen: true, title: 'Cuenta Solicitada', message: 'El mesero ya fue notificado. No se aceptarán nuevos pedidos hasta que el personal abra otra sesión.', type: 'success', hideCancel: true,
             onConfirm: () => setModalConfig({ isOpen: false })
           });
-        } catch (e) {
-          setModalConfig({ isOpen: true, title: 'Error', message: 'Error al solicitar la cuenta.', type: 'warning', hideCancel: true, onConfirm: () => setModalConfig({isOpen: false}) });
+        } catch (error: any) {
+          setModalConfig({ isOpen: true, title: 'Error al solicitar la cuenta', message: error.response?.data?.message || 'Verifica tu conexión e intenta nuevamente.', type: 'warning', hideCancel: true, onConfirm: () => setModalConfig({isOpen: false}) });
         }
       },
       onCancel: () => setModalConfig({ isOpen: false })
@@ -201,7 +251,7 @@ export default function MenuCliente() {
 
   if (!mesaId) {
     return (
-      <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
+      <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
         <ConfirmModal {...modalConfig} />
         <header className="customer-menu-header" style={{ position: 'relative', padding: '2rem 1.5rem', textAlign: 'center', backgroundColor: COLORS.navy, color: COLORS.white }}>
           <button onClick={() => navigate('/admin')} aria-label="Regresar al panel principal" title="Regresar al panel principal" style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
@@ -229,14 +279,14 @@ export default function MenuCliente() {
   }
 
   return (
-    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', paddingBottom: '120px', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
+    <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', paddingBottom: '120px', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
       
       <header className="customer-menu-header" style={{ padding: '2rem 1.5rem', textAlign: 'center', borderBottom: `1px solid ${COLORS.border}`, backgroundColor: COLORS.navy, color: COLORS.white, position: 'relative' }}>
         <button onClick={() => navigate('/menu')} aria-label="Volver a seleccionar mesa" title="Volver a seleccionar mesa" style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
           <ArrowLeft size={18} />
         </button>
-        <button onClick={solicitarCuenta} disabled={cuentaSolicitada} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.5rem', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: cuentaSolicitada ? 'default' : 'pointer', opacity: cuentaSolicitada ? 0.8 : 1, color: COLORS.white, gap: '0.4rem', fontSize: '0.8rem' }}>
+        <button onClick={solicitarCuenta} disabled={!sesionHabilitada || cuentaSolicitada} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.5rem', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: !sesionHabilitada || cuentaSolicitada ? 'not-allowed' : 'pointer', opacity: !sesionHabilitada || cuentaSolicitada ? 0.65 : 1, color: COLORS.white, gap: '0.4rem', fontSize: '0.8rem' }}>
           <Receipt size={16} /> {cuentaSolicitada ? 'Cuenta solicitada' : 'Pedir Cuenta'}
         </button>
         <UtensilsCrossed size={32} color={COLORS.white} strokeWidth={1} style={{ margin: '0 auto 1rem auto' }} />
@@ -245,8 +295,14 @@ export default function MenuCliente() {
         {nombreCliente && <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.85rem', color: '#cbd5e1' }}>Mesa a nombre de: {nombreCliente}</p>}
       </header>
 
+      {!sesionHabilitada && (
+        <p role="status" style={{ maxWidth: '600px', margin: '1rem auto 0', padding: '0.9rem 1rem', color: '#7c2d12', backgroundColor: '#fff7ed', border: '1px solid #fed7aa', borderRadius: '8px' }}>
+          {mensajeEstadoSesion}
+        </p>
+      )}
+
       <div className="customer-menu-content" style={{ maxWidth: '600px', margin: '0 auto', padding: '1.5rem' }}>
-        <button onClick={abrirPedidoLlevar} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', width: '100%', padding: '0.8rem', marginBottom: '2rem', backgroundColor: COLORS.white, color: COLORS.navy, border: `1px solid ${COLORS.navy}`, borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}>
+        <button onClick={abrirPedidoLlevar} disabled={!sesionHabilitada} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', width: '100%', padding: '0.8rem', marginBottom: '2rem', backgroundColor: COLORS.white, color: COLORS.navy, border: `1px solid ${COLORS.navy}`, borderRadius: '6px', cursor: sesionHabilitada ? 'pointer' : 'not-allowed', opacity: sesionHabilitada ? 1 : 0.6, fontWeight: '600' }}>
           <Package size={17} /> Anexar productos para llevar
         </button>
         {Object.keys(categorias).map(catName => (
@@ -296,15 +352,15 @@ export default function MenuCliente() {
               <span style={{ display: 'block', fontSize: '0.95rem', fontWeight: '600' }}>{carritoExpandido ? 'Ocultar detalle' : 'Ver detalle del pedido'} ({carrito.reduce((acc, item) => acc + item.cantidad, 0)})</span>
               <span style={{ display: 'block', marginTop: '0.15rem', color: '#e2e8f0', fontSize: '0.85rem' }}>Total: ${carrito.reduce((acc, item) => acc + Number(item.precio) * item.cantidad, 0).toFixed(2)}</span>
             </button>
-            <button onClick={handleEnviarClick} disabled={enviando} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0, backgroundColor: COLORS.white, color: COLORS.navy, padding: '0.65rem 0.9rem', border: 'none', borderRadius: '6px', fontWeight: '600', fontSize: '0.9rem', cursor: enviando ? 'wait' : 'pointer', opacity: enviando ? 0.7 : 1 }}>
-              <ShoppingCart size={16} /> {enviando ? 'Enviando...' : 'Ordenar'}
+            <button onClick={handleEnviarClick} disabled={enviando || !sesionHabilitada} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexShrink: 0, backgroundColor: COLORS.white, color: COLORS.navy, padding: '0.65rem 0.9rem', border: 'none', borderRadius: '6px', fontWeight: '600', fontSize: '0.9rem', cursor: enviando ? 'wait' : sesionHabilitada ? 'pointer' : 'not-allowed', opacity: enviando || !sesionHabilitada ? 0.7 : 1 }}>
+              <ShoppingCart size={16} /> {enviando ? 'Enviando...' : sesionHabilitada ? 'Ordenar' : 'Pedidos no disponibles'}
             </button>
           </div>
         </section>
       )}
 
       {showNombreModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60, padding: '1rem', backdropFilter: 'blur(2px)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60, padding: '1rem', backdropFilter: 'blur(2px)' }}>
           <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '400px', border: `1px solid ${COLORS.navy}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
             <div style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <User color={COLORS.navy} />
@@ -335,7 +391,7 @@ export default function MenuCliente() {
       />
 
       {selectedProduct && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.6)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.6)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
           <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '500px', border: `1px solid ${COLORS.navy}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)', boxSizing: 'border-box' }}>
             <div style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem' }}>
               <h2 style={{ margin: '0 0 0.3rem 0', color: COLORS.navy, fontSize: '1.3rem', fontWeight: '600' }}>{selectedProduct.nombre}</h2>

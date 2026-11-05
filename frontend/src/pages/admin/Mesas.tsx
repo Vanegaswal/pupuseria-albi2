@@ -6,15 +6,16 @@ import { ArrowLeft, LayoutDashboard, Plus, Printer } from 'lucide-react';
 import ConfirmModal from '../../components/ConfirmModal';
 
 const COLORS = {
-  navy: '#002855',
+  navy: '#1D2B5C',
   white: '#ffffff',
-  border: '#e2e8f0',
-  textMuted: '#475569'
+  border: '#e8d7d4',
+  textMuted: '#64748b'
 };
 
 export default function Mesas() {
   const [mesas, setMesas] = useState<any[]>([]);
   const [numeroMesa, setNumeroMesa] = useState('');
+  const [abriendoMesa, setAbriendoMesa] = useState<number | null>(null);
   const [modalConfig, setModalConfig] = useState<any>({ isOpen: false });
   const navigate = useNavigate();
   const menuBaseUrl = (import.meta.env.VITE_PUBLIC_APP_URL || window.location.origin).replace(/\/+$/, '');
@@ -35,6 +36,34 @@ export default function Mesas() {
       setNumeroMesa('');
       fetchMesas();
     } catch (e) { console.error(e); }
+  };
+
+  const handleOpenSession = async (mesa: any) => {
+    if (abriendoMesa !== null) return;
+    setAbriendoMesa(mesa.id);
+    try {
+      await api.post(`/mesas/${mesa.id}/abrir-sesion`);
+      await fetchMesas();
+      setModalConfig({
+        isOpen: true,
+        title: 'Sesión abierta',
+        message: `La mesa ${mesa.numero_mesa} ya está habilitada para recibir pedidos.`,
+        type: 'success',
+        hideCancel: true,
+        onConfirm: () => setModalConfig({ isOpen: false })
+      });
+    } catch (error: any) {
+      setModalConfig({
+        isOpen: true,
+        title: 'No se pudo abrir la sesión',
+        message: error.response?.data?.message || 'Verifica tu conexión e intenta nuevamente.',
+        type: 'warning',
+        hideCancel: true,
+        onConfirm: () => setModalConfig({ isOpen: false })
+      });
+    } finally {
+      setAbriendoMesa(null);
+    }
   };
 
   const handlePrintQr = (mesa: any) => {
@@ -67,8 +96,8 @@ export default function Mesas() {
             * { box-sizing: border-box; }
             html, body { width: 148mm; height: 210mm; margin: 0; background: #fff; color: #102a43; font-family: Arial, sans-serif; }
             .sign { width: 100%; height: 100%; padding: 12mm; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; }
-            .brand { margin: 0; color: #002855; font-size: 17pt; font-weight: 700; letter-spacing: 1px; }
-            .mesa { margin: 8mm 0 0; color: #002855; font-size: 34pt; font-weight: 700; }
+            .brand { margin: 0; color: #1D2B5C; font-size: 17pt; font-weight: 700; letter-spacing: 1px; }
+            .mesa { margin: 8mm 0 0; color: #1D2B5C; font-size: 34pt; font-weight: 700; }
             .instruction { margin: 5mm 0 0; color: #334e68; font-size: 14pt; line-height: 1.4; }
             .qr { width: 112mm; height: 112mm; padding: 4mm; border: 1px solid #d9e2ec; }
             .qr svg { display: block; width: 100%; height: 100%; }
@@ -102,7 +131,7 @@ export default function Mesas() {
   };
 
   return (
-    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Inter", "Segoe UI", sans-serif', color: COLORS.navy }}>
+    <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
       <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -145,6 +174,14 @@ export default function Mesas() {
                 <QRCodeSVG value={`${menuBaseUrl}/menu/${mesa.id}`} size={140} fgColor={COLORS.navy} />
               </div>
 
+              <button
+                onClick={() => handleOpenSession(mesa)}
+                disabled={abriendoMesa !== null || Boolean(mesa.estado_sesion)}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '0.65rem 0.8rem', marginBottom: '0.75rem', backgroundColor: mesa.estado_sesion ? '#64748b' : COLORS.navy, color: COLORS.white, border: 'none', borderRadius: '6px', cursor: abriendoMesa !== null || mesa.estado_sesion ? 'not-allowed' : 'pointer', opacity: abriendoMesa !== null && abriendoMesa !== mesa.id ? 0.65 : 1, fontWeight: '500' }}
+              >
+                {abriendoMesa === mesa.id ? 'Abriendo sesión...' : mesa.estado_sesion === 'pidiendo_cuenta' ? 'Pendiente de cobro' : mesa.estado_sesion === 'abierta' ? 'Sesión abierta' : 'Abrir sesión'}
+              </button>
+
               <button onClick={() => handlePrintQr(mesa)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.65rem 0.8rem', marginBottom: '1rem', backgroundColor: COLORS.navy, color: COLORS.white, border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>
                 <Printer size={16} /> Imprimir QR
               </button>
@@ -152,7 +189,11 @@ export default function Mesas() {
               <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: `1px solid ${COLORS.border}`, paddingTop: '1rem', marginTop: 'auto' }}>
                 <span style={{ fontSize: '0.85rem', color: COLORS.textMuted }}>Estado: </span>
                 <span style={{ fontSize: '0.85rem', fontWeight: '500', color: COLORS.navy }}>
-                  {mesa.estado.charAt(0).toUpperCase() + mesa.estado.slice(1)}
+                  {mesa.estado_sesion === 'pidiendo_cuenta'
+                    ? 'Pendiente de cobro'
+                    : mesa.estado_sesion === 'abierta'
+                      ? 'Sesión abierta'
+                      : mesa.estado.charAt(0).toUpperCase() + mesa.estado.slice(1)}
                 </span>
               </div>
             </div>

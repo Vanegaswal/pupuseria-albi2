@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getMesas, getMesasPublicas, getSesionPublica, createMesa, solicitarCuenta } from '../controllers/mesas.controller';
+import { getMesas, getMesasPublicas, getSesionPublica, abrirSesion, createMesa, solicitarCuenta } from '../controllers/mesas.controller';
 import { requireAuth, requireRole } from '../middlewares/auth.middleware';
 
 const router = Router();
@@ -75,6 +75,34 @@ router.post('/', requireAuth, requireRole(['Administrador']), createMesa);
 
 /**
  * @swagger
+ * /mesas/{id}/abrir-sesion:
+ *   post:
+ *     summary: Abrir una sesión para una mesa
+ *     tags: [Mesas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       201:
+ *         description: Sesión abierta correctamente
+ *       401:
+ *         description: Token inválido o ausente
+ *       403:
+ *         description: Se requiere rol Administrador o Mesero
+ *       404:
+ *         description: Mesa no encontrada
+ *       409:
+ *         description: La mesa ya tiene una sesión activa
+ */
+router.post('/:id/abrir-sesion', requireAuth, requireRole(['Administrador', 'Mesero']), abrirSesion);
+
+/**
+ * @swagger
  * /mesas/{id}/solicitar-cuenta:
  *   post:
  *     summary: Solicitar la cuenta de una mesa desde el menú cliente
@@ -88,6 +116,12 @@ router.post('/', requireAuth, requireRole(['Administrador']), createMesa);
  *     responses:
  *       200:
  *         description: Cuenta solicitada
+ *       400:
+ *         description: Identificador de mesa inválido
+ *       404:
+ *         description: Mesa no encontrada
+ *       409:
+ *         description: No hay sesión abierta o la cuenta ya fue solicitada
  *       500:
  *         description: No se pudo solicitar la cuenta
  */

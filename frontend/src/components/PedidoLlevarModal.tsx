@@ -20,10 +20,10 @@ interface PedidoLlevarModalProps {
 }
 
 const COLORS = {
-  navy: '#002855',
+  navy: '#1D2B5C',
   white: '#ffffff',
-  border: '#e2e8f0',
-  textMuted: '#475569'
+  border: '#e8d7d4',
+  textMuted: '#64748b'
 };
 
 export default function PedidoLlevarModal({ isOpen, productos, enviando, onClose, onSubmit }: PedidoLlevarModalProps) {

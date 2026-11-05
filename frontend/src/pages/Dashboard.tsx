@@ -4,14 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import { LayoutDashboard, ChefHat, Banknote, Smartphone, LogOut, PackageSearch, BarChart3, Utensils, BookOpen } from 'lucide-react';
 import api from '../api/axios';
 
-// Paleta Minimalista: Blanco y Azul Navy
+// Paleta de marca: rosa niebla, azul tinta y esmeralda
 const COLORS = {
-  navy: '#002855',
-  navyLight: '#003a7a',
+  navy: '#1D2B5C',
+  navyLight: '#34406d',
   white: '#ffffff',
-  offWhite: '#f8fafc',
-  border: '#e2e8f0',
-  textMuted: '#475569'
+  offWhite: '#F4E1DE',
+  border: '#e8d7d4',
+  textMuted: '#64748b'
 };
 
 export default function Dashboard({ title }: { title: string }) {
@@ -58,7 +58,7 @@ export default function Dashboard({ title }: { title: string }) {
   };
 
   return (
-    <div className="dashboard-page" style={{ backgroundColor: COLORS.white, minHeight: '100vh', padding: '2rem', color: COLORS.navy, fontFamily: '"Inter", "Segoe UI", sans-serif' }}>
+    <div className="dashboard-page" style={{ backgroundColor: COLORS.offWhite, minHeight: '100vh', padding: '2rem', color: COLORS.navy, fontFamily: '"Merriweather", Georgia, serif' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         <header className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1.5rem' }}>
           <h2 style={{ fontSize: '1.5rem', margin: 0, fontWeight: '600', color: COLORS.navy }}>{title}</h2>

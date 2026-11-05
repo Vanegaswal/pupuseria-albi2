@@ -1,12 +1,33 @@
 :root {
-  font-family: Inter, 'Segoe UI', sans-serif;
-  color: #002855;
-  background: #ffffff;
+  --color-rose-mist: #F4E1DE;
+  --color-ink-blue: #1D2B5C;
+  --color-emerald: #00A060;
+  --color-surface: #ffffff;
+  --color-border: #e8d7d4;
+  --color-text-muted: #64748b;
+  font-family: 'Merriweather', Georgia, serif;
+  color: var(--color-ink-blue);
+  background: var(--color-rose-mist);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color-scheme: light;
+}
+
+body {
+  font-family: 'Merriweather', Georgia, serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.035em;
 }
 
 #root {
@@ -22,7 +43,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #ffffff;
+  background: var(--color-rose-mist);
 }
 
 button,
@@ -35,13 +56,13 @@ textarea {
 input,
 select,
 textarea {
-  color: #002855;
-  background-color: #ffffff;
+  color: var(--color-ink-blue);
+  background-color: var(--color-surface);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #64748b;
+  color: var(--color-text-muted);
   opacity: 1;
 }
 
