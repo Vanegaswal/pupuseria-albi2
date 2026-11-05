@@ -43,12 +43,15 @@ describe('Autorización de sesiones y pedidos', () => {
 
   it('no considera habilitada una sesión pendiente de cobro en la consulta pública', async () => {
     mockedQuery.mockResolvedValueOnce({
+      rows: [{ id: 8, numero_mesa: 2 }]
+    } as never).mockResolvedValueOnce({
       rows: [{ id: 'session-id', mesa_id: 8, cliente_nombre: 'QA', estado: 'pidiendo_cuenta' }]
     } as never);
 
     const response = await request(app).get('/api/mesas/8/sesion-publica');
 
     expect(response.status).toBe(200);
+    expect(response.body.mesa).toEqual({ id: 8, numero_mesa: 2 });
     expect(response.body.activa).toBe(false);
     expect(response.body.sesion.estado).toBe('pidiendo_cuenta');
   });

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import axios from 'axios';
 import api from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, LayoutDashboard, Plus, Printer } from 'lucide-react';
@@ -52,11 +53,23 @@ export default function Mesas() {
         hideCancel: true,
         onConfirm: () => setModalConfig({ isOpen: false })
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let message = 'No se pudo completar la solicitud. Verifica la conexión e intenta nuevamente.';
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const responseMessage = error.response?.data?.message;
+        if (status === 404 && typeof error.response?.data === 'string' && error.response.data.includes('Cannot POST')) {
+          message = 'El backend publicado todavía no tiene la ruta para abrir sesiones. Actualiza el despliegue del backend en Render y vuelve a intentarlo.';
+        } else if (typeof responseMessage === 'string') {
+          message = responseMessage;
+        } else if (!error.response) {
+          message = 'No hubo respuesta del backend. Verifica la URL de la API y que el servicio esté disponible.';
+        }
+      }
       setModalConfig({
         isOpen: true,
         title: 'No se pudo abrir la sesión',
-        message: error.response?.data?.message || 'Verifica tu conexión e intenta nuevamente.',
+        message,
         type: 'warning',
         hideCancel: true,
         onConfirm: () => setModalConfig({ isOpen: false })
