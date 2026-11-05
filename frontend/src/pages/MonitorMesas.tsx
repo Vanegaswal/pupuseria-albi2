@@ -4,14 +4,14 @@ import { Utensils, ArrowLeft, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const COLORS = {
-  ink: '#1D2B5C',
-  rose: '#F4E1DE',
+  ink: '#002855',
+  rose: '#ffffff',
   white: '#ffffff',
-  border: '#e8d7d4',
-  textMuted: '#64748b',
-  free: '#00A060',
-  occupied: '#1D2B5C',
-  requesting: '#F4E1DE'
+  border: '#e2e8f0',
+  textMuted: '#475569',
+  free: '#16a34a',
+  occupied: '#dc2626',
+  requesting: '#ea580c'
 };
 
 export default function MonitorMesas() {
@@ -41,13 +41,13 @@ export default function MonitorMesas() {
   };
 
   return (
-    <div style={{ backgroundColor: COLORS.rose, minHeight: '100vh', color: COLORS.ink }}>
-      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.ink, color: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
+    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', color: COLORS.ink }}>
+      <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, color: COLORS.ink, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.rose}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
+          <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.border}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.ink }}>
             <ArrowLeft size={18} />
           </button>
-          <Utensils size={24} color={COLORS.rose} strokeWidth={1.5} />
+          <Utensils size={24} color={COLORS.ink} strokeWidth={1.5} />
           <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: '500' }}>Monitor de Mesas en Tiempo Real</h2>
         </div>
       </header>
@@ -71,12 +71,12 @@ export default function MonitorMesas() {
                   backgroundColor: COLORS.white, border: `2px solid ${color}`, borderRadius: '12px', padding: '1.5rem', 
                   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', 
                   cursor: 'pointer', transition: 'transform 0.2s',
-                  boxShadow: isOcupada ? '0 4px 10px rgba(29, 43, 92, 0.1)' : '0 4px 10px rgba(0, 160, 96, 0.1)'
+                  boxShadow: isOcupada ? '0 4px 10px rgba(220, 38, 38, 0.1)' : '0 4px 10px rgba(22, 163, 74, 0.1)'
                 }}
                 onMouseOver={e => e.currentTarget.style.transform = 'translateY(-4px)'}
                 onMouseOut={e => e.currentTarget.style.transform = 'none'}
               >
-                <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: isPidiendoCuenta ? COLORS.ink : color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: COLORS.white }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: COLORS.white }}>
                   <Users size={30} />
                 </div>
                 <h3 style={{ margin: 0, fontSize: '1.2rem', color: COLORS.ink }}>Mesa {mesa.numero_mesa}</h3>
@@ -91,7 +91,7 @@ export default function MonitorMesas() {
       </div>
 
       {selectedMesa && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
           <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '500px', border: `1px solid ${COLORS.ink}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
             <div className="table-detail-header" style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ margin: 0, color: COLORS.ink, fontSize: '1.3rem', fontWeight: '600' }}>Detalle - Mesa {selectedMesa.numero_mesa}</h2>
@@ -106,7 +106,7 @@ export default function MonitorMesas() {
                 <p style={{ margin: '0 0 0.5rem 0', color: COLORS.textMuted }}>Total consumido: <strong style={{ color: COLORS.ink, fontSize: '1.2rem' }}>${Number(selectedMesa.sesion.total).toFixed(2)}</strong></p>
                 <p style={{ margin: '0 0 1.5rem 0', color: COLORS.textMuted, fontSize: '0.9rem' }}>Abierta a las: {new Date(selectedMesa.sesion.abierta_en).toLocaleTimeString()}</p>
                 
-                <div style={{ backgroundColor: COLORS.rose, padding: '1rem', borderRadius: '8px', border: `1px solid ${COLORS.border}`, marginBottom: '1.5rem' }}>
+                <div style={{ backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '8px', border: `1px solid ${COLORS.border}`, marginBottom: '1.5rem' }}>
                   <p style={{ margin: 0, fontSize: '0.9rem', color: COLORS.textMuted }}>* Los pedidos se gestionan desde el módulo de Cocina, y el cobro desde el Punto de Venta.</p>
                 </div>
               </div>

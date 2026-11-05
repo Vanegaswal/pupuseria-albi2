@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../components/ConfirmModal';
 
 const COLORS = {
-  navy: '#1D2B5C',
+  navy: '#002855',
   white: '#ffffff',
-  border: '#e8d7d4',
-  textMuted: '#64748b'
+  border: '#e2e8f0',
+  textMuted: '#475569'
 };
 
 export default function Caja() {
@@ -199,7 +199,7 @@ export default function Caja() {
       ticket?.document.write(`
         <html><head><title>Comprobante</title><style>
           body{font-family:monospace;padding:18px;color:#111;max-width:390px;margin:0 auto;font-size:12px}
-          h2,p{margin:4px 0}h2{text-align:center;color:#1D2B5C;font-size:18px}
+          h2,p{margin:4px 0}h2{text-align:center;color:#002855;font-size:18px}
           .center{text-align:center}.rule{border:0;border-top:1px dashed #555;margin:12px 0}
           table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:5px 2px;text-align:left;vertical-align:top}
           th{border-bottom:1px solid #555}.number{text-align:right;white-space:nowrap}
@@ -232,7 +232,7 @@ export default function Caja() {
   };
 
   return (
-    <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
+    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
       <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>

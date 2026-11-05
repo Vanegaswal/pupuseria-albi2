@@ -5,10 +5,10 @@ import api from '../../api/axios';
 import ConfirmModal from '../../components/ConfirmModal';
 
 const COLORS = {
-  navy: '#1D2B5C',
+  navy: '#002855',
   white: '#ffffff',
-  border: '#e8d7d4',
-  textMuted: '#64748b'
+  border: '#e2e8f0',
+  textMuted: '#475569'
 };
 
 type Category = { id: number; nombre: string; activa: boolean };
@@ -163,7 +163,7 @@ export default function MenuAdmin() {
   const categoriasActivas = categorias.filter(category => category.activa);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#F4E1DE', color: COLORS.navy, fontFamily: '"Merriweather", Georgia, serif' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: COLORS.white, color: COLORS.navy, fontFamily: '"Merriweather", Georgia, serif' }}>
       <ConfirmModal {...modalConfig} />
       <header className="module-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 2rem', borderBottom: `1px solid ${COLORS.border}` }}>
         <button onClick={() => navigate('/admin')} aria-label="Regresar al panel" title="Regresar al panel" style={{ ...buttonStyle, width: '38px', height: '38px', padding: 0 }}><ArrowLeft size={18} /></button>

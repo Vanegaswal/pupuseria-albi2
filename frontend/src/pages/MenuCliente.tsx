@@ -7,10 +7,10 @@ import ConfirmModal from '../components/ConfirmModal';
 import PedidoLlevarModal from '../components/PedidoLlevarModal';
 
 const COLORS = {
-  navy: '#1D2B5C',
+  navy: '#002855',
   white: '#ffffff',
-  border: '#e8d7d4',
-  textMuted: '#64748b'
+  border: '#e2e8f0',
+  textMuted: '#475569'
 };
 
 export default function MenuCliente() {
@@ -69,10 +69,6 @@ export default function MenuCliente() {
       .then(([, mesasRes, sesionRes]) => {
         setMesas(mesasRes.data);
         if (mesaId) {
-<<<<<<< HEAD
-          const sesion = sesionRes.data.sesion;
-          setEstadoSesion(sesion?.estado ?? null);
-=======
           const mesa = sesionRes.data.mesa
             ?? mesasRes.data.find((item: any) => String(item.id) === mesaId);
           if (!mesa) {
@@ -80,7 +76,7 @@ export default function MenuCliente() {
             return;
           }
           setNumeroMesa(Number(mesa.numero_mesa));
->>>>>>> aa42237 (actualizacion de frontend)
+          setEstadoSesion(sesionRes.data.sesion?.estado ?? null);
         }
         if (mesaId && sesionRes.data.activa) {
           const nombre = sesionRes.data.sesion.cliente_nombre || localStorage.getItem(`cliente_${mesaId}`) || '';
@@ -122,16 +118,12 @@ export default function MenuCliente() {
     acc[p.categoria_nombre].push(p);
     return acc;
   }, {});
-<<<<<<< HEAD
-  const numeroMesa = mesas.find(mesa => String(mesa.id) === mesaId)?.numero_mesa ?? mesaId;
   const sesionHabilitada = estadoSesion === 'abierta';
   const mensajeEstadoSesion = estadoSesion === 'pidiendo_cuenta'
     ? 'La cuenta está pendiente de cobro. Por el momento no se aceptan pedidos nuevos.'
     : estadoSesion === 'pagada' || estadoSesion === 'cerrada'
       ? 'Esta sesión ya fue cerrada. Solicita al personal que abra una nueva sesión para realizar pedidos.'
       : 'Esta mesa todavía no está habilitada para recibir pedidos. Solicita al personal que abra una sesión.';
-=======
->>>>>>> aa42237 (actualizacion de frontend)
 
   const openModal = (producto: any) => {
     setSelectedProduct(producto);
@@ -275,7 +267,7 @@ export default function MenuCliente() {
 
   if (mesaId && mesaNoEncontrada) {
     return (
-      <div role="alert" style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '1.5rem', backgroundColor: '#F4E1DE', color: COLORS.navy, textAlign: 'center' }}>
+      <div role="alert" style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '1.5rem', backgroundColor: '#ffffff', color: COLORS.navy, textAlign: 'center' }}>
         <p>Este código QR no corresponde a una mesa válida. Escanéalo nuevamente o solicita ayuda al personal.</p>
       </div>
     );
@@ -283,7 +275,7 @@ export default function MenuCliente() {
 
   if (!mesaId) {
     return (
-      <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
+      <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
         <ConfirmModal {...modalConfig} />
         <header className="customer-menu-header" style={{ position: 'relative', padding: '2rem 1.5rem', textAlign: 'center', backgroundColor: COLORS.navy, color: COLORS.white }}>
           <button onClick={() => navigate('/admin')} aria-label="Regresar al panel principal" title="Regresar al panel principal" style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
@@ -311,7 +303,7 @@ export default function MenuCliente() {
   }
 
   return (
-    <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', paddingBottom: '120px', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
+    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', paddingBottom: '120px', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
       
       <header className="customer-menu-header" style={{ padding: '2rem 1.5rem', textAlign: 'center', borderBottom: `1px solid ${COLORS.border}`, backgroundColor: COLORS.navy, color: COLORS.white, position: 'relative' }}>
@@ -392,7 +384,7 @@ export default function MenuCliente() {
       )}
 
       {showNombreModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60, padding: '1rem', backdropFilter: 'blur(2px)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 60, padding: '1rem', backdropFilter: 'blur(2px)' }}>
           <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '400px', border: `1px solid ${COLORS.navy}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)' }}>
             <div style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <User color={COLORS.navy} />
@@ -423,7 +415,7 @@ export default function MenuCliente() {
       />
 
       {selectedProduct && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(29, 43, 92, 0.6)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 40, 85, 0.6)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 50, padding: '1rem', backdropFilter: 'blur(2px)' }}>
           <div style={{ backgroundColor: COLORS.white, borderRadius: '12px', padding: '2rem', width: '100%', maxWidth: '500px', border: `1px solid ${COLORS.navy}`, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)', boxSizing: 'border-box' }}>
             <div style={{ borderBottom: `1px solid ${COLORS.border}`, paddingBottom: '1rem', marginBottom: '1.5rem' }}>
               <h2 style={{ margin: '0 0 0.3rem 0', color: COLORS.navy, fontSize: '1.3rem', fontWeight: '600' }}>{selectedProduct.nombre}</h2>

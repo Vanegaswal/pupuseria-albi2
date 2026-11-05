@@ -1,13 +1,13 @@
 :root {
-  --color-rose-mist: #F4E1DE;
-  --color-ink-blue: #1D2B5C;
-  --color-emerald: #00A060;
+  --color-background: #ffffff;
+  --color-navy: #002855;
+  --color-success: #16a34a;
   --color-surface: #ffffff;
-  --color-border: #e8d7d4;
-  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-text-muted: #475569;
   font-family: 'Merriweather', Georgia, serif;
-  color: var(--color-ink-blue);
-  background: var(--color-rose-mist);
+  color: var(--color-navy);
+  background: var(--color-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -43,7 +43,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--color-rose-mist);
+  background: var(--color-background);
 }
 
 button,
@@ -56,7 +56,7 @@ textarea {
 input,
 select,
 textarea {
-  color: var(--color-ink-blue);
+  color: var(--color-navy);
   background-color: var(--color-surface);
 }
 

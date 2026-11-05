@@ -6,12 +6,12 @@ import { ChefHat, CheckCircle2, Clock, AlertCircle, LogOut, ArrowLeft, Package }
 import { useNavigate } from 'react-router-dom';
 
 const COLORS = {
-  ink: '#1D2B5C',
-  rose: '#F4E1DE',
-  emerald: '#00A060',
+  ink: '#002855',
+  rose: '#ffffff',
+  emerald: '#002855',
   white: '#ffffff',
-  border: '#e8d7d4',
-  textMuted: '#64748b',
+  border: '#e2e8f0',
+  textMuted: '#475569',
   overdue: '#dc2626'
 };
 
@@ -110,7 +110,7 @@ export default function Cocina() {
   };
 
   return (
-    <div style={{ backgroundColor: COLORS.rose, minHeight: '100vh', color: COLORS.ink }}>
+    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', color: COLORS.ink }}>
       <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.ink, color: COLORS.white, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', backgroundColor: 'transparent', border: `1px solid ${COLORS.white}`, borderRadius: '8px', cursor: 'pointer', color: COLORS.white }}>
@@ -134,7 +134,7 @@ export default function Cocina() {
       <div className="kitchen-orders" style={{ padding: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
         {errorCarga && <p role="alert" style={{ gridColumn: '1 / -1', margin: 0, padding: '0.85rem 1rem', borderRadius: '8px', backgroundColor: '#fff1f0', color: COLORS.overdue }}>{errorCarga}</p>}
         {pedidosPorMesa.map(({ mesaId, numeroMesa, ordenes }) => (
-          <article key={mesaId} style={{ overflow: 'hidden', backgroundColor: COLORS.white, border: `1px solid ${COLORS.ink}`, borderRadius: '12px', boxShadow: '0 6px 20px rgba(29, 43, 92, 0.08)' }}>
+          <article key={mesaId} style={{ overflow: 'hidden', backgroundColor: COLORS.white, border: `1px solid ${COLORS.ink}`, borderRadius: '12px', boxShadow: '0 6px 20px rgba(0, 40, 85, 0.08)' }}>
             <header style={{ padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', backgroundColor: COLORS.ink, color: COLORS.white }}>
               <div>
                 <h2 style={{ margin: 0, fontSize: '1.25rem' }}>Mesa {numeroMesa}</h2>
@@ -154,10 +154,10 @@ export default function Cocina() {
                 const retrasado = tiempoValido && ahora - creadoEn >= 15 * 60 * 1000;
                 const colorEstado = retrasado
                   ? COLORS.overdue
-                  : isPendiente ? COLORS.ink : isPreparando ? COLORS.emerald : COLORS.ink;
+                  : isPendiente ? COLORS.ink : isPreparando ? '#003a7a' : COLORS.ink;
                 const fondoEstado = retrasado
                   ? '#fff1f0'
-                  : isPendiente ? COLORS.rose : isPreparando ? '#e6f5ee' : COLORS.white;
+                  : isPendiente ? COLORS.rose : isPreparando ? '#f8fafc' : COLORS.white;
 
                 return (
                   <section key={pedido.id} style={{ padding: '1rem 0', borderBottom: orderIndex < ordenes.length - 1 ? `1px dashed ${COLORS.border}` : 'none' }}>

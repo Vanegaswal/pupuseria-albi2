@@ -48,21 +48,17 @@ export const getSesionPublica = async (req: Request, res: Response): Promise<voi
       ORDER BY abierta_en DESC
       LIMIT 1
     `, [mesaId]);
-<<<<<<< HEAD
     const ultimaSesion = result.rows[0] ?? null;
     const sesion = ultimaSesion
       ? ultimaSesion.estado === 'abierta'
         ? ultimaSesion
         : { estado: ultimaSesion.estado }
       : null;
-    res.json({ activa: ultimaSesion?.estado === 'abierta', sesion });
-=======
     res.json({
       mesa: mesa.rows[0],
-      activa: result.rows.length > 0,
-      sesion: result.rows[0] ?? null
+      activa: ultimaSesion?.estado === 'abierta',
+      sesion
     });
->>>>>>> aa42237 (actualizacion de frontend)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al consultar la sesión de mesa' });

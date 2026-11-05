@@ -6,10 +6,10 @@ import { ArrowLeft, LayoutDashboard, Plus, Printer } from 'lucide-react';
 import ConfirmModal from '../../components/ConfirmModal';
 
 const COLORS = {
-  navy: '#1D2B5C',
+  navy: '#002855',
   white: '#ffffff',
-  border: '#e8d7d4',
-  textMuted: '#64748b'
+  border: '#e2e8f0',
+  textMuted: '#475569'
 };
 
 export default function Mesas() {
@@ -96,8 +96,8 @@ export default function Mesas() {
             * { box-sizing: border-box; }
             html, body { width: 148mm; height: 210mm; margin: 0; background: #fff; color: #102a43; font-family: Arial, sans-serif; }
             .sign { width: 100%; height: 100%; padding: 12mm; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; }
-            .brand { margin: 0; color: #1D2B5C; font-size: 17pt; font-weight: 700; letter-spacing: 1px; }
-            .mesa { margin: 8mm 0 0; color: #1D2B5C; font-size: 34pt; font-weight: 700; }
+            .brand { margin: 0; color: #002855; font-size: 17pt; font-weight: 700; letter-spacing: 1px; }
+            .mesa { margin: 8mm 0 0; color: #002855; font-size: 34pt; font-weight: 700; }
             .instruction { margin: 5mm 0 0; color: #334e68; font-size: 14pt; line-height: 1.4; }
             .qr { width: 112mm; height: 112mm; padding: 4mm; border: 1px solid #d9e2ec; }
             .qr svg { display: block; width: 100%; height: 100%; }
@@ -131,7 +131,7 @@ export default function Mesas() {
   };
 
   return (
-    <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
+    <div style={{ backgroundColor: COLORS.white, minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
       <ConfirmModal {...modalConfig} />
       <header className="module-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.white, borderBottom: `1px solid ${COLORS.border}`, padding: '1.5rem 2rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
