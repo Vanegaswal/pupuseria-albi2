@@ -35,6 +35,12 @@ export const getSesionPublica = async (req: Request, res: Response): Promise<voi
       res.status(400).json({ message: 'Mesa inválida' });
       return;
     }
+    const mesa = await pool.query('SELECT id, numero_mesa FROM mesas WHERE id = $1', [mesaId]);
+    if (mesa.rows.length === 0) {
+      res.status(404).json({ message: 'Mesa no encontrada' });
+      return;
+    }
+
     const result = await pool.query(`
       SELECT id, mesa_id, cliente_nombre, estado
       FROM sesiones_mesa
@@ -42,6 +48,7 @@ export const getSesionPublica = async (req: Request, res: Response): Promise<voi
       ORDER BY abierta_en DESC
       LIMIT 1
     `, [mesaId]);
+<<<<<<< HEAD
     const ultimaSesion = result.rows[0] ?? null;
     const sesion = ultimaSesion
       ? ultimaSesion.estado === 'abierta'
@@ -49,6 +56,13 @@ export const getSesionPublica = async (req: Request, res: Response): Promise<voi
         : { estado: ultimaSesion.estado }
       : null;
     res.json({ activa: ultimaSesion?.estado === 'abierta', sesion });
+=======
+    res.json({
+      mesa: mesa.rows[0],
+      activa: result.rows.length > 0,
+      sesion: result.rows[0] ?? null
+    });
+>>>>>>> aa42237 (actualizacion de frontend)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al consultar la sesión de mesa' });

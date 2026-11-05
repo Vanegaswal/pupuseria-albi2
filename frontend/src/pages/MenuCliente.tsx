@@ -17,6 +17,8 @@ export default function MenuCliente() {
   const { mesaId } = useParams();
   const navigate = useNavigate();
   const [mesas, setMesas] = useState<any[]>([]);
+  const [numeroMesa, setNumeroMesa] = useState<number | null>(null);
+  const [mesaNoEncontrada, setMesaNoEncontrada] = useState(false);
   const [productos, setProductos] = useState<any[]>([]);
   const [carrito, setCarrito] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +40,9 @@ export default function MenuCliente() {
   const [modalConfig, setModalConfig] = useState<any>({ isOpen: false });
 
   useEffect(() => {
+    setNumeroMesa(null);
+    setMesaNoEncontrada(false);
+
     const cargarProductos = async () => {
       const response = await api.get('/productos');
       setProductos(response.data);
@@ -64,8 +69,18 @@ export default function MenuCliente() {
       .then(([, mesasRes, sesionRes]) => {
         setMesas(mesasRes.data);
         if (mesaId) {
+<<<<<<< HEAD
           const sesion = sesionRes.data.sesion;
           setEstadoSesion(sesion?.estado ?? null);
+=======
+          const mesa = sesionRes.data.mesa
+            ?? mesasRes.data.find((item: any) => String(item.id) === mesaId);
+          if (!mesa) {
+            setMesaNoEncontrada(true);
+            return;
+          }
+          setNumeroMesa(Number(mesa.numero_mesa));
+>>>>>>> aa42237 (actualizacion de frontend)
         }
         if (mesaId && sesionRes.data.activa) {
           const nombre = sesionRes.data.sesion.cliente_nombre || localStorage.getItem(`cliente_${mesaId}`) || '';
@@ -81,14 +96,20 @@ export default function MenuCliente() {
           }
         }
       })
-      .catch(() => setModalConfig({
-        isOpen: true,
-        title: 'No se pudo cargar el menú',
-        message: 'Verifica tu conexión e intenta nuevamente.',
-        type: 'warning',
-        hideCancel: true,
-        onConfirm: () => setModalConfig({ isOpen: false })
-      }))
+      .catch((error: any) => {
+        if (error.response?.status === 404 && mesaId) {
+          setMesaNoEncontrada(true);
+          return;
+        }
+        setModalConfig({
+          isOpen: true,
+          title: 'No se pudo cargar el menú',
+          message: 'Verifica tu conexión e intenta nuevamente.',
+          type: 'warning',
+          hideCancel: true,
+          onConfirm: () => setModalConfig({ isOpen: false })
+        });
+      })
       .finally(() => setLoading(false));
 
     return () => {
@@ -101,6 +122,7 @@ export default function MenuCliente() {
     acc[p.categoria_nombre].push(p);
     return acc;
   }, {});
+<<<<<<< HEAD
   const numeroMesa = mesas.find(mesa => String(mesa.id) === mesaId)?.numero_mesa ?? mesaId;
   const sesionHabilitada = estadoSesion === 'abierta';
   const mensajeEstadoSesion = estadoSesion === 'pidiendo_cuenta'
@@ -108,6 +130,8 @@ export default function MenuCliente() {
     : estadoSesion === 'pagada' || estadoSesion === 'cerrada'
       ? 'Esta sesión ya fue cerrada. Solicita al personal que abra una nueva sesión para realizar pedidos.'
       : 'Esta mesa todavía no está habilitada para recibir pedidos. Solicita al personal que abra una sesión.';
+=======
+>>>>>>> aa42237 (actualizacion de frontend)
 
   const openModal = (producto: any) => {
     setSelectedProduct(producto);
@@ -249,6 +273,14 @@ export default function MenuCliente() {
 
   if (loading) return <div style={{ textAlign: 'center', padding: '4rem', color: COLORS.textMuted, fontFamily: 'sans-serif' }}>Cargando menú...</div>;
 
+  if (mesaId && mesaNoEncontrada) {
+    return (
+      <div role="alert" style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '1.5rem', backgroundColor: '#F4E1DE', color: COLORS.navy, textAlign: 'center' }}>
+        <p>Este código QR no corresponde a una mesa válida. Escanéalo nuevamente o solicita ayuda al personal.</p>
+      </div>
+    );
+  }
+
   if (!mesaId) {
     return (
       <div style={{ backgroundColor: '#F4E1DE', minHeight: '100vh', fontFamily: '"Merriweather", Georgia, serif', color: COLORS.navy }}>
@@ -291,7 +323,7 @@ export default function MenuCliente() {
         </button>
         <UtensilsCrossed size={32} color={COLORS.white} strokeWidth={1} style={{ margin: '0 auto 1rem auto' }} />
         <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '500', letterSpacing: '0.5px' }}>Pupusería Albi</h1>
-        <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.9rem', color: '#e0e7ff' }}>Mesa {numeroMesa}</p>
+        <p style={{ margin: '0.4rem 0 0 0', fontSize: '0.9rem', color: '#e0e7ff' }}>Mesa {numeroMesa ?? '—'}</p>
         {nombreCliente && <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.85rem', color: '#cbd5e1' }}>Mesa a nombre de: {nombreCliente}</p>}
       </header>
 
